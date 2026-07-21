@@ -1,2 +1,1 @@
-"use strict";
-//OOP in JavaScript
+console.log("Helloo Motuuu!!");

@@ -327,3 +327,123 @@ tesla.chargeBattery(90);
 console.log(tesla);
 tesla.brake();
 tesla.accelerate();
+
+//Inheritance between classes : ES6 classes
+class PersonEIN {
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+  calcAge() {
+    console.log(2026 - this.birthYear);
+  }
+  greet() {
+    console.log(`Hey ${this.fullName}`);
+  }
+  get age() {
+    return 2026 - this.birthYear;
+  }
+  set fullName(name) {
+    if (name.includes(" ")) this._fullName = name;
+    else alert(`${name} is not a full name`);
+  }
+  get fullName() {
+    return this._fullName;
+  }
+  static hey() {
+    console.log(`Hey There!!`);
+  }
+}
+
+class StudentEIN extends PersonEIN {
+  constructor(fullName, birthYear, course) {
+    //Always needs to happen first
+    super(fullName, birthYear);
+    this.course = course;
+  }
+  introduce() {
+    console.log(`My name is ${this.fullName}`);
+  }
+  //Overriding the method of the parent class
+  calcAge() {
+    console.log(
+      `I m ${2026 - this.birthYear} years old but as a student i feel more like ${2026 - this.birthYear + 10}`,
+    );
+  }
+}
+
+const martha = new StudentEIN("Martha Jonas", 2012, "Computer Science");
+martha.introduce();
+martha.calcAge();
+
+//Inheritance between classes: Object.create
+const PersonObj = {
+  calcAge() {
+    console.log(2026 - this.birthYear);
+  },
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const robin = Object.create(PersonObj);
+
+const StudentObj = Object.create(PersonObj);
+
+StudentObj.init = function (firstName, birthYear, course) {
+  PersonObj.init.call(this, firstName, birthYear);
+  this.course = course;
+};
+StudentObj.introduce = function () {
+  console.log(`My name is ${this.firstName}`);
+};
+
+const jay = Object.create(StudentObj);
+jay.init("Jay", 2010, "Computer Science");
+jay.introduce();
+jay.calcAge();
+
+//Another class example
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+    //we can also do this in our constructor
+    this.movements = [];
+    this.locale = navigator.language;
+
+    console.log("Thanks for opening an account");
+  }
+  deposit(val) {
+    this.movements.push(val);
+  }
+  withdraw(val) {
+    this.deposit(-val);
+  }
+  approveLoan(val) {
+    return true;
+  }
+  requestLoan(val) {
+    if (this.approveLoan(val)) {
+      this.deposit(val);
+      console.log("Loan approved!");
+    }
+  }
+}
+const acc1 = new Account("Jonas", "EUR", 1111);
+
+// acc1.movements.push(250);
+// acc1.movements.push(-140);
+
+//These methods are fine
+acc1.deposit(250);
+acc1.withdraw(140);
+acc1.requestLoan(1000);
+
+//But we should not be allowed to acces such things like pin , and if the loan should be approved or not etc
+acc1.approveLoan(1000);
+console.log(acc1.pin);
+
+console.log(acc1);

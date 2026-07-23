@@ -447,3 +447,74 @@ acc1.approveLoan(1000);
 console.log(acc1.pin);
 
 console.log(acc1);
+
+//Encapsulation : Private Class Fields and Methods
+
+//1)Public fields
+//2)Private fields
+//3)Public methods
+//4)Private methods
+// STATIC version of these four
+
+class AccountEn {
+  //public field
+  locale = navigator.language;
+  bank = "Bankist";
+
+  //Private fields --> can only be use inside the class , but cannot be accesed outside the class
+  #movements = [];
+  //if we want to keep something private but also we want it in constructor then first declare it here
+  #pin;
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.#pin = pin;
+    //we can also do this in our constructor
+    // this.movements = [];
+    // this.locale = navigator.language;
+
+    console.log("Thanks for opening an account");
+  }
+  //Public Interface API
+  getMovements() {
+    //not chainable , only work if applied at the end
+    return this.#movements;
+  }
+  deposit(val) {
+    this.#movements.push(val);
+    //we need to return the objects for chaining the methods
+    return this;
+  }
+  withdraw(val) {
+    this.deposit(-val);
+    return this;
+  }
+  //Private Interface API
+  #approveLoan(val) {
+    //Fake method
+    return true;
+  }
+  requestLoan(val) {
+    if (this.#approveLoan(val)) {
+      this.deposit(val);
+      console.log("Loan approved!");
+    }
+    return this;
+  }
+}
+const acc = new AccountEn("Jonas", "EUR", 1111);
+console.log(acc);
+//acc.approveLoan(232); //this will give error because we declared this method as private so we cannot access this outside the class
+
+//Chaining Methods
+acc
+  .deposit(300)
+  .withdraw(100)
+  .withdraw(50)
+  .deposit(200)
+  .requestLoan(1000)
+  //this will work only at the end
+  .getMovements();
+console.log(acc.getMovements());
+console.log(acc);
